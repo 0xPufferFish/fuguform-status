@@ -33,6 +33,10 @@ status-website:
   logoUrl: https://0xpufferfish.github.io/fuguform-status/favicon.svg
   hideNavLogo: true
   faviconSvg: https://0xpufferfish.github.io/fuguform-status/favicon.svg
+  # _layout.svelte's PNG <link rel="icon"> falls back to `${baseUrl}/logo-192.png` computed from
+  # an older published @upptime/status-page build that drops the baseUrl prefix (renders
+  # `/logo-192.png`, 404s outside a root-domain deploy) — set explicitly so it resolves.
+  favicon: https://0xpufferfish.github.io/fuguform-status/logo-192.png
   navbar:
     - title: GitHub
       href: https://github.com/$OWNER/$REPO
@@ -177,7 +181,7 @@ status-website:
     /* global.css paints article.up/down/degraded's left border a status colour with its own
        !important — shrinking the width alone still leaves a coloured hairline (the classic
        stock-Upptime tell). Neutralise the colour too: status is carried only by the h4 dot. */
-    article.up, article.down, article.degraded { border-left-width: 1px !important; border-left-color: var(--ff-rule-strong) !important; }
+    article.up, article.down, article.degraded { border-left-width: 1px !important; border-left-color: var(--card-border-color) !important; }
     @media (hover: hover) {
       article.link:hover { border-color: var(--ff-rule-strong) !important; }
     }
@@ -241,7 +245,7 @@ status-website:
       flex-wrap: wrap !important;
       gap: 0 !important;
       padding: 3px !important;
-      background: #E1E5EC !important;
+      background: #EDF0F4 !important;
       border: 1px solid var(--ff-rule-strong) !important;
       border-radius: 8px !important;
     }
@@ -275,6 +279,19 @@ status-website:
       border-radius: 8px !important;
       font-size: 16px !important;
       font-family: 'Plus Jakarta Sans', system-ui, sans-serif !important;
+    }
+    /* The "already have a token" branch renders a bare <button on:click={remove}> with no class
+       (the submit branch's button carries .submit-button, styled above) — give it the same
+       secondary-button shape rather than leaving it in stock 0.2rem-radius grey. */
+    button:not(.submit-button) {
+      min-height: 44px !important;
+      padding: 0 16px !important;
+      border: 1px solid var(--ff-rule-strong) !important;
+      border-radius: 8px !important;
+      background: #FFFFFF !important;
+      color: var(--ff-ink) !important;
+      font: 600 15px 'Plus Jakarta Sans', system-ui, sans-serif !important;
+      cursor: pointer;
     }
     svg[stroke] { stroke: var(--ff-carbon) !important; }
 
