@@ -1,10 +1,10 @@
 {
-  "background_color": "#ffffff",
-  "theme_color": "#333333",
-  "name": "Upptime",
-  "short_name": "Upptime",
+  "background_color": "#EDF0F4",
+  "theme_color": "#33348C",
+  "name": "Status layanan FuguForm",
+  "short_name": "FuguForm",
   "display": "minimal-ui",
-  "start_url": "/",
+  "start_url": "/fuguform-status/",
   "icons": [
     {
       "src": "logo-192.png",
