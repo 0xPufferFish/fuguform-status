@@ -1,31 +1,33 @@
-# Change these first
-owner: upptime # Your GitHub organization or username, where this repository lives
-repo: upptime # The name of this repository
+# FuguForm uptime monitor — checks every 5 minutes from GitHub Actions. A failed check opens a GitHub
+# issue assigned to the owner (GitHub notifies by email / mobile push) and closes it on recovery.
+owner: 0xPufferFish
+repo: fuguform-status
 
 sites:
-  - name: Google
-    url: https://www.google.com
-  - name: Wikipedia
-    url: https://en.wikipedia.org
-  - name: Hacker News
-    url: https://news.ycombinator.com
-  - name: Secret Site
-    url: $SECRET_SITE
+  # The API Worker itself: the Pages SPA fallback also answers 200 on a missing route, so the body is checked.
+  - name: API
+    url: https://app.fuguform.com/api/health
+    __dangerous__body_down_if_text_missing: '"ok":true'
+  - name: Builder
+    url: https://app.fuguform.com/masuk
+  - name: fuguform.com
+    url: https://fuguform.com/
+    __dangerous__body_down_if_text_missing: FuguForm
+  # One live tenant page (the renderer Worker + KV). Swap for a demo tenant if DuckDive is ever deactivated.
+  - name: Tenant page (DuckDive)
+    url: https://duckdive.fuguform.com/
+    __dangerous__body_down_if_text_missing: DuckDive
+
+assignees:
+  - 0xPufferFish
 
 status-website:
-  # Add your custom domain name, or remove the `cname` line if you don't have a domain
-  # Uncomment the `baseUrl` line if you don't have a custom domain and add your repo name there
-  cname: demo.upptime.js.org
-  # baseUrl: /your-repo-name
-  logoUrl: https://raw.githubusercontent.com/upptime/upptime.js.org/master/static/img/icon.svg
-  name: Upptime
-  introTitle: "**Upptime** is the open-source uptime monitor and status page, powered entirely by GitHub."
-  introMessage: This is a sample status page which uses **real-time** data from our [GitHub repository](https://github.com/upptime/upptime). No server required — just GitHub Actions, Issues, and Pages. [**Get your own for free**](https://github.com/upptime/upptime)
+  baseUrl: /fuguform-status
+  name: FuguForm Status
+  introTitle: "Status layanan FuguForm"
+  introMessage: Diperiksa otomatis setiap 5 menit.
   navbar:
     - title: Status
       href: /
     - title: GitHub
       href: https://github.com/$OWNER/$REPO
-
-# Upptime also supports notifications, assigning issues, and more
-# See https://upptime.js.org/docs/configuration
