@@ -21,7 +21,12 @@ sites:
 assignees:
   - 0xPufferFish
 
-# status-website and i18n are the only blocks this repo's restyle touches (plus assets/) — see
+# The detail page's response-time chart (Chart.js in @upptime/status-page's Graph.svelte) reads these
+# directly: FuguForm's --carbon line over --carbon-wash fill.
+graphBorderColor: "#33348C"
+graphBackgroundColor: "#EAEAF1"
+
+# status-website, i18n and the two graph colours above are the only blocks the restyle touches (plus assets/) — see
 # docs/BUILDER_DESIGN.md §2/§4 in the main fuguform repo for the palette/type/component source this
 # maps onto. theme: light is forced because the builder has no dark surface to match against.
 status-website:
@@ -205,11 +210,25 @@ status-website:
     .live-status article.down h4::before { background: #C0392B; }
     .live-status article.degraded h4::before { background: #B7791F; }
 
-    /* Sparkline background on the home cards has no CSS hook of its own (Upptime targets a
-       nonexistent nested .graph element, so --graph-opacity/--graph-filter are dead in the stock
-       theme) — the raw teal diagonal read as noise against the card text, so it's dropped; the
-       real, readable, recoloured graph lives on the detail page below. */
-    article.graph { background-image: none !important; }
+    /* Home-card sparkline: Upptime paints graphs/<slug>/response-time-*.png (a fixed teal PNG from
+       @upptime/graphs) straight behind the card text through the --background custom property. It moves
+       to its own band under the numbers instead — recoloured toward carbon with a filter (the PNG's colour
+       isn't configurable) and faded, so the trend reads without sitting under any text. */
+    .live-status article.graph { background-image: none !important; position: relative; padding-bottom: 60px !important; }
+    .live-status article.graph::after {
+      content: "";
+      position: absolute;
+      left: 16px;
+      right: 16px;
+      bottom: 12px;
+      height: 36px;
+      background-image: var(--background);
+      background-size: 100% 100%;
+      background-repeat: no-repeat;
+      filter: hue-rotate(68deg) saturate(1.8) brightness(0.75);
+      opacity: 0.6;
+      pointer-events: none;
+    }
 
     /* The favicon fetch (icons.duckduckgo.com/ip3/<host>.ico) renders as a generic globe against a
        domain with no favicon of its own — the status dot already carries the signal. */
@@ -299,17 +318,6 @@ status-website:
     footer { opacity: 1 !important; color: var(--ff-ink-soft) !important; font-size: 13px !important; }
     footer a { color: var(--ff-ink-soft) !important; }
 
-    /* ---- Detail page: recolour the response-time chart's default teal toward carbon ----
-       Chart.js reads graphBorderColor/graphBackgroundColor, which are top-level .upptimerc.yml
-       keys — outside the status-website:/i18n: block this file is scoped to, so the real fix
-       (graphBorderColor: "#33348C", graphBackgroundColor: "#EAEAF1") needs an owner decision, not
-       a CSS patch. hue-rotate(70deg) alone lands the hue right (~238° vs carbon's 239°) but
-       can't touch the line's lightness, so it read as a washed-out periwinkle rather than carbon
-       indigo — confirmed by rendering both against a static swatch locally. This raises
-       saturation and lowers brightness for a noticeably closer, if still imperfect, match; the
-       fill (already pale) can't be pushed toward carbon-wash independently of the line since one
-       filter has to serve both. */
-    canvas { filter: hue-rotate(68deg) saturate(1.8) brightness(0.75); }
 
     @media (max-width: 480px) {
       .container { padding: 0 16px !important; }
