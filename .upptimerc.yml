@@ -1,5 +1,13 @@
-# FuguForm uptime monitor — checks every 5 minutes from GitHub Actions. A failed check opens a GitHub
-# issue assigned to the owner (GitHub notifies by email / mobile push) and closes it on recovery.
+# FuguForm uptime monitor. A failed check opens a GitHub issue assigned to the owner (GitHub notifies
+# by email / mobile push, and NOTIFICATION_CUSTOM_WEBHOOK pushes to ntfy) and closes it on recovery.
+#
+# Cadence, measured rather than assumed: uptime.yml declares `*/5 * * * *`, but GitHub throttles
+# high-frequency scheduled workflows on free runners, so it actually fires about every 3.5 hours
+# (41 runs between 2026-09-14 and 2026-09-20: min gap 113 min, median 220, max 368 — 6.7 runs/day).
+# Lowering the cron would not help and raising it changes nothing; this is GitHub's scheduler, not
+# config. The public introMessage below therefore says "beberapa kali sehari", which is true, instead
+# of "setiap 5 menit", which the cron claims and the runner never delivers. Anything needing
+# minutes-scale detection has to come from a service with its own scheduler, not from Actions.
 owner: 0xPufferFish
 repo: fuguform-status
 
@@ -33,7 +41,7 @@ status-website:
   baseUrl: /fuguform-status
   name: FuguForm
   introTitle: "Status layanan FuguForm"
-  introMessage: "Diperiksa otomatis setiap 5 menit — kalau ada gangguan, akan tercatat di sini."
+  introMessage: "Diperiksa otomatis beberapa kali sehari — kalau ada gangguan, akan tercatat di sini."
   theme: light
   logoUrl: https://0xpufferfish.github.io/fuguform-status/favicon.svg
   hideNavLogo: true
